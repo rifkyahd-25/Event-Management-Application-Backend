@@ -29,3 +29,13 @@ export const create = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getAllEvents = async (req, res, next) => {
+  try{
+    const events = await Event.find().populate("title", "description");
+    res.json(events);
+  }catch(error){
+    next(error);
+  }
+};
+

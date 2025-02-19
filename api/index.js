@@ -6,6 +6,7 @@ import cors from 'cors';
 import authRoutes from "./routes/auth.route.js";
 import eventRoutes from "./routes/event.route.js"
 import cookieParser from 'cookie-parser';
+import bookingRoutes from "./routes/booking.route.js";
 
 dotenv.config();
 const app = express();
@@ -32,3 +33,5 @@ app.listen(3000, () => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/event", eventRoutes);
+app.use("/api/bookings", bookingRoutes);
+

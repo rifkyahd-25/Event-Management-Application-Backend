@@ -32,6 +32,8 @@ export const signup = async (req, res, next) => {
 
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
+
+
   if (!email || !password || email === "" || password === "") {
     next(errorHandler(400, "All fields are required!"));
   }
@@ -45,7 +47,7 @@ export const signin = async (req, res, next) => {
       next(errorHandler(400, "Invalid credentials"));
     }
 
-    const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: validUser._id, isAdmin: validUser.isAdmin}, process.env.JWT_SECRET);
 
     const { password: pass, ...rest } = validUser._doc; //removing password from user object
 

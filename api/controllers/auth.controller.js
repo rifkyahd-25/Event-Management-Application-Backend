@@ -51,10 +51,10 @@ export const signin = async (req, res, next) => {
 
     res
       .status(200)
-      .cookie("token", token, {
+      .cookie("access_token", token, {
         httpOnly: true,
       })//sending token in cookie
-      .json(rest);//sending user object without password
+      .json({access_token: token, user: rest});//sending user object without password
   } catch (error) {
     next(error);
   }

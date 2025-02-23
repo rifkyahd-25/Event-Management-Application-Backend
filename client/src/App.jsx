@@ -7,6 +7,7 @@ import { Event } from "./pages/Event";
 import { Profile } from "./pages/Profile";
 import { Dashboard } from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
+import { EventDetails } from "./pages/EventDetails";
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
         <Route path="/event" element={<Event />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/events/:eventId" element={<EventDetails />} />
+
 
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />

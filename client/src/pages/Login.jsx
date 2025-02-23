@@ -8,6 +8,7 @@ import {
   signInFailure,
   signInSuccess,
 } from "../redux/slices/userSlice";
+import Loader from "../components/Loader";
 
 export const Login = () => {
   const [userData, setUserData] = useState({
@@ -63,25 +64,28 @@ export const Login = () => {
     try {
       setLoading(true);
       setErrorMessage(null);
-      dispatch(signInStart()); 
+      dispatch(signInStart());
 
-      const { data } = await userlogin(userData); 
+      const { data } = await userlogin(userData);
       if (!data.user) {
         dispatch(signInFailure(data.message));
-        return setErrorMessage(data.message); 
+        return setErrorMessage(data.message);
       }
 
-      dispatch(signInSuccess(data)); 
-      navigate("/"); 
+      dispatch(signInSuccess(data));
+      navigate("/");
     } catch (error) {
       setErrorMessage(error.response?.data?.message || "Something went wrong");
       dispatch(signInFailure(error.message));
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
   return (
-    <section ref={containerRef} className="  bg-gray-50 dark:bg-gray-900">
+    <section
+      ref={containerRef}
+      className=" opacity-0  bg-gray-50 dark:bg-gray-900"
+    >
       <div className="flex flex-col items-center justify-center px-6 py-6 mx-auto md:h-screen lg:py-0">
         <h1
           ref={titleRef}
@@ -90,9 +94,9 @@ export const Login = () => {
           Wllcome to My page
         </h1>
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div ref={formRef} className="p-6 space-y-4 md:space-y-6 sm:p-8">
+          <div ref={formRef} className=" p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold dark:text-white loading-tight tracking-tight text-gray-900 md:text-2xl">
-              Create an account
+              Login to Account
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleLogin}>
               <div>
@@ -136,10 +140,10 @@ export const Login = () => {
               >
                 {loading ? (
                   <>
-                    <span>Loading....</span>
+                    <Loader />
                   </>
                 ) : (
-                  " Create an account"
+                  " Login to account"
                 )}
               </button>
             </form>

@@ -11,6 +11,11 @@ export const creatBooking = async (req, res, next) => {
             return next(errorHandler(404, "Event not found"));
         }
 
+        const existingBooking = await Booking.findOne({ event: event, user: req.user.id });
+        if (existingBooking) {
+            return next(errorHandler(400,  "You have already booked this event!"))
+        }
+
         const booking = new Booking({
             event: event,
             user: req.user.id,

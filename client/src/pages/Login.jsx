@@ -3,7 +3,11 @@ import { gsap } from "gsap";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { userlogin } from "../api/authApi";
-import { login } from "../redux/slices/authSlice";
+import {
+  signInStart,
+  signInFailure,
+  signInSuccess,
+} from "../redux/slices/userSlice";
 
 export const Login = () => {
   const [userData, setUserData] = useState({
@@ -23,15 +27,16 @@ export const Login = () => {
   useEffect(() => {
     gsap.fromTo(
       containerRef.current,
-      { opacity: 0,  },
-      { opacity: 1, duration: 1 ,  }
+      { opacity: 0 },
+      { opacity: 1, duration: 1 }
     );
 
     gsap.fromTo(
       titleRef.current,
       {
         opacity: 0,
-        y: -50, visibility: "hidden"
+        y: -50,
+        visibility: "hidden",
       },
       {
         visibility: "visible",
@@ -58,14 +63,20 @@ export const Login = () => {
     try {
       setLoading(true);
       setErrorMessage(null);
+      dispatch(signInStart()); 
 
-      const { data } = await userlogin(userData);
-      localStorage.setItem("access_token", data.token);
-      dispatch(login(data.user));
-      navigate("/");
+      const { data } = await userlogin(userData); 
+      if (!data.user) {
+        dispatch(signInFailure(data.message));
+        return setErrorMessage(data.message); 
+      }
+
+      dispatch(signInSuccess(data)); 
+      navigate("/"); 
     } catch (error) {
-      setErrorMessage(error.message);
-      setLoading(false);
+      setErrorMessage(error.response?.data?.message || "Something went wrong");
+      dispatch(signInFailure(error.message));
+      setLoading(false); 
     }
   };
 

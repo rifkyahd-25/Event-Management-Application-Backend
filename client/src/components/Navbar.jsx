@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 export const Navbar = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   return (
@@ -18,7 +18,7 @@ export const Navbar = () => {
           >
             Events
           </Link>
-          {user ? (
+          {currentUser ? (
             <>
               <Link
                 className="block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
@@ -48,7 +48,7 @@ export const Navbar = () => {
           )}
         </div>
         <button className="hidden sm:inline-block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ">
-          {user ? "wellcome" : "login"}
+          {currentUser ? "wellcome" : "login"}
         </button>
       </div>
     </nav>

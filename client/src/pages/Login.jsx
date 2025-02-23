@@ -23,17 +23,18 @@ export const Login = () => {
   useEffect(() => {
     gsap.fromTo(
       containerRef.current,
-      { opacity: 0 },
-      { opacity: 1, duration: 1 }
+      { opacity: 0,  },
+      { opacity: 1, duration: 1 ,  }
     );
 
     gsap.fromTo(
       titleRef.current,
       {
         opacity: 0,
-        y: -50,
+        y: -50, visibility: "hidden"
       },
       {
+        visibility: "visible",
         opacity: 1,
         y: 0,
         duration: 1,
@@ -59,7 +60,7 @@ export const Login = () => {
       setErrorMessage(null);
 
       const { data } = await userlogin(userData);
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("access_token", data.token);
       dispatch(login(data.user));
       navigate("/");
     } catch (error) {
@@ -69,7 +70,7 @@ export const Login = () => {
   };
 
   return (
-    <section ref={containerRef} className="bg-gray-50 dark:bg-gray-900">
+    <section ref={containerRef} className="  bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-6 mx-auto md:h-screen lg:py-0">
         <h1
           ref={titleRef}

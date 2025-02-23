@@ -21,8 +21,8 @@ export const SignUp = () => {
   useEffect(() => {
     gsap.fromTo(
       containerRef.current,
-      { opacity: 0 },
-      { opacity: 1, duration: 1 }
+      { opacity: 0, visibility: "hidden" },
+      { opacity: 1, duration: 1 , visibility: "visible" }
     );
 
     gsap.fromTo(

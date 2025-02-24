@@ -9,7 +9,7 @@ const BookingForm = ({ eventId }) => {
   const handleBooking = async () => {
     setLoading(true);
     try {
-      const { data } = await createBooking(eventId);
+      await createBooking(eventId);
       setPublishError(null);
     } catch (error) {
       if (error.status === 400 && error.message) {

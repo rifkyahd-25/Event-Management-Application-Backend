@@ -33,7 +33,6 @@ export const signup = async (req, res, next) => {
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
 
-
   if (!email || !password || email === "" || password === "") {
     next(errorHandler(400, "All fields are required!"));
   }
@@ -47,7 +46,10 @@ export const signin = async (req, res, next) => {
       next(errorHandler(400, "Invalid credentials"));
     }
 
-    const token = jwt.sign({ id: validUser._id, isAdmin: validUser.isAdmin}, process.env.JWT_SECRET);
+    const token = jwt.sign(
+      { id: validUser._id, isAdmin: validUser.isAdmin },
+      process.env.JWT_SECRET
+    );
 
     const { password: pass, ...rest } = validUser._doc; //removing password from user object
 
@@ -55,21 +57,34 @@ export const signin = async (req, res, next) => {
       .status(200)
       .cookie("access_token", token, {
         httpOnly: true,
-      })//sending token in cookie
-      .json({access_token: token, user: rest});//sending user object without password
+      }) //sending token in cookie
+      .json({ access_token: token, user: rest }); //sending user object without password
   } catch (error) {
     next(error);
   }
 };
 
-
 export const signout = async (req, res, next) => {
   try {
-    res
-    .clearCookie("access_token")
-    .status(200)
-    .json("Signout successful");
+    res.clearCookie("access_token").status(200).json("Signout successful");
   } catch (error) {
     next(error);
+  }
+};
+
+export const getProfile = async (req, res, next) => {
+  try {
+    if (!req.user || !req.user.id) {
+      return next(errorHandler(401, "Unauthorized")); // Handle missing user
+    }
+
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return next(errorHandler(404, "User not found"));
+    }
+
+    res.json(user);
+  } catch (error) {
+    next(error); // Ensure consistent error handling
   }
 };

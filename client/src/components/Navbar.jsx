@@ -1,9 +1,22 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { logoutUser } from "../api/authApi";
+import { signoutSuccess } from "../redux/slices/userSlice";
 
 export const Navbar = () => {
   const { currentUser } = useSelector((state) => state.user);
+  const Navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const handleSignout = async () => {
+    try {
+      await logoutUser();
+      dispatch(signoutSuccess())
+      Navigate("/login");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -30,9 +43,12 @@ export const Navbar = () => {
                 className="block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                 to="/eventcreate"
               >
-                Createevent
+                Create Eevent
               </Link>
-              <button className="block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
+              <button
+                onClick={handleSignout}
+                className="block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+              >
                 Logout
               </button>
             </>

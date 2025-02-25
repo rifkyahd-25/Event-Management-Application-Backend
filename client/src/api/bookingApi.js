@@ -17,5 +17,5 @@ export const createBooking = async (eventId) => {
 
 // Cancel a booking
 export const cancelBooking = async (bookingId) => {
-  return await axiosClient.delete(`/bookings/${id}/cancel`);
+  return await axiosClient.delete(`/bookings/${bookingId}/cancel`);
 };

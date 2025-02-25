@@ -1,18 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { getProfile } from "../api/authApi";
-import { getUserBookings } from "../api/bookingApi";
+import { getUserBookings, cancelBooking } from "../api/bookingApi";
 import Loader from "../components/Loader";
 import { EventCard } from "../components/EventCard";
 import gsap from "gsap";
 
 export const Profile = () => {
-  
   const [user, setUser] = useState(null);
   const [bookings, setBookings] = useState([]);
   const cardsRef = useRef([]);
 
   useEffect(() => {
-    
     const fetchProfile = async () => {
       try {
         const { data } = await getProfile();
@@ -38,7 +36,26 @@ export const Profile = () => {
     fetchBookings();
   }, []);
 
+  useEffect(() => {
+    if (bookings.length > 0) {
+      gsap.to(cardsRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        stagger: 0.2, // Animates each card with a slight delay
+      });
+    }
+  }, [bookings]);
 
+  const handleCancelBooking = async (bookingId) => {
+    try {
+      await cancelBooking(bookingId);
+      // Remove canceled booking from state
+      setBookings(bookings.filter((booking) => booking._id !== bookingId));
+    } catch (error) {
+      console.error("Error canceling booking:", error);
+    }
+  };
 
   if (!user) return <Loader />;
   if (bookings.length === 0) return <p>No bookings found.</p>;
@@ -50,16 +67,14 @@ export const Profile = () => {
         <h1 className="  text-3xl font-semibold text-gray-800 dark:text-white">
           Profile
         </h1>
-        <div className="mt-4 flex flex-col  items-center mb-4  " >
+        <div className="mt-4 flex flex-col  items-center mb-4  ">
           <p className="text-xl text-gray-700 dark:text-gray-300">
-          
-             <span className="font-bold text-gray-900 dark:text-white">
+            <span className="font-bold text-gray-900 dark:text-white">
               {user.username}
             </span>
           </p>
           <p className="text-xl text-gray-700 dark:text-gray-300">
-         
-             <span className="font-bold text-gray-900 dark:text-white">
+            <span className="font-bold text-gray-900 dark:text-white">
               {user.email}
             </span>
           </p>
@@ -70,14 +85,22 @@ export const Profile = () => {
             My Bookings
           </h2>
           <div className="grid grid-cols-3 gap-5">
-            {bookings.map((booking, index) => (
-              <div
-                key={booking._id}
-               
-              >
-                <EventCard events={booking.event} />
-              </div>
-            ))}
+            {bookings.map((booking, index) =>
+              booking.event ? (
+                <div
+                  key={booking._id}
+                  ref={(el) => (cardsRef.current[index] = el)}
+                   className="opacity-0 transform translate-y-5"
+                >
+                  <EventCard
+                    key={booking._id}
+                    events={booking.event}
+                    isBooked={true}
+                    onCancelBooking={() => handleCancelBooking(booking._id)}
+                  />
+                </div>
+              ) : null
+            )}
           </div>
         </div>
       </div>

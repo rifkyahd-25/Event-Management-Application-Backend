@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createEvent } from "../api/eventApi"; 
 import Loader from "../components/Loader";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+
+
+
+
 
 export const EventCreate = () => {
   const [eventData, setEventData] = useState({
@@ -10,10 +16,14 @@ export const EventCreate = () => {
     date: "",
     location: "",
   });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+  const formRef = useRef();
+
+  gsap.registerPlugin(useGSAP);
 
   const handleChange = (e) => {
     setEventData({ ...eventData, [e.target.name]: e.target.value });
@@ -34,8 +44,18 @@ export const EventCreate = () => {
     }
   };
 
+  useGSAP(() => {
+    gsap.from(formRef.current, {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+      ease: "power2.out",
+    });
+  }, { scope: formRef });
+  
+
   return (
-    <div className="max-w-lg mx-auto mt-10 bg-white p-6 shadow-md rounded-lg dark:bg-gray-900">
+    <div  ref={formRef} className=" max-w-lg mx-auto mt-10 bg-white p-6 shadow-md rounded-lg dark:bg-gray-900">
       <h2 className="text-2xl font-semibold mb-4 dark:text-white">Create New Event</h2>
       {error && <p className="text-red-500">{error}</p>}
       <form onSubmit={handleSubmit}>

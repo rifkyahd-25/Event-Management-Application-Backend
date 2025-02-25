@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
-import { getEvents } from "../api/eventApi";
+import { deleteEvent, getEvents } from "../api/eventApi";
 import { EventCard } from "../components/EventCard";
 import Loader from "../components/Loader";
 import gsap from "gsap";
+import { useSelector } from "react-redux";
 
 export const Event = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const cardsRef = useRef([]);
 
   useEffect(() => {
@@ -43,6 +45,15 @@ export const Event = () => {
     }
   }, [events]);
 
+  const handleDelete = async (eventId) => {
+    try {
+      await deleteEvent(eventId);
+      setEvents(events.filter((event) => event._id !== eventId));
+    } catch (error) {
+      console.error("Error canceling booking:", error);
+    }
+  };
+
   if (loading) return <Loader />;
 
   return (
@@ -55,7 +66,7 @@ export const Event = () => {
             ref={(el) => (cardsRef.current[index] = el)} // Store refs dynamically
             className="opacity-0 transform translate-y-5" // Set initial opacity and position for GSAP
           >
-            <EventCard events={event} />
+            <EventCard events={event} onDelete={handleDelete} />
           </div>
         ))}
       </div>

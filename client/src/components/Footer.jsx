@@ -2,8 +2,8 @@ import React from "react";
 
 export const Footer = () => {
   return (
-    <footer className="bg-white rounded-lg shadow-sm dark:bg-gray-900 m-6">
-      <div className="w-full max-x-screen-xl mx-auto p-4 md:py-8">
+    <footer className="  bg-white rounded-lg shadow-sm dark:bg-gray-900 fixed  bottom-0 w-full">
+      <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
         <div className="sm:flex  sm:items-center sm:justify-between">
 
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Event manager</span>

@@ -7,7 +7,7 @@ const router = express.Router();
 router.post('/create', verifyToken, creatBooking);
 router.get('/getevuser', verifyToken, getUserBookings);
 router.get('/all', verifyToken, getAllbooking);
-router.put('/:id/cancel', verifyToken, cancelBooking);
+router.delete('/:id/cancel', verifyToken, cancelBooking);
 
 
 export default router;

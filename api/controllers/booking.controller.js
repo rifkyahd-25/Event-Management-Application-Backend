@@ -43,8 +43,8 @@ export const cancelBooking = async (req, res, next) => {
         const booking = await Booking.findOne({ _id: req.params.id, user: req.user.id});
         if (!booking) return res.status(404).json({ message: 'Booking not found' });
 
-        booking.status = 'cancelled';
-        await booking.save();
+     
+        await booking.deleteOne();
         res.json({ message: 'Booking cancelled successfully' });
     } catch (error) {
        next(error);

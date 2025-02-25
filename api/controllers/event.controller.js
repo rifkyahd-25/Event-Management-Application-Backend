@@ -74,20 +74,30 @@ export const updateEvent = async (req, res, next) => {
 };
 
 export const deleteEvent = async (req, res, next) => {
+  if (!req.user.isAdmin && req.user.id !== req.params.id) {
+    return next(errorHandler(403, "You are not allowed to delete this post"));
+  }
   try {
-    const event = await Event.findById(req.params.id);
-    if (!event) {
-      return next(errorHandler(404, "Event not found"));
-    }
-    if (!req.user.isAdmin) {
-      return next(
-        errorHandler(403, "You are not allowed to delete this event")
-      );
-    }
-
-    await event.deleteOne();
-    res.json({ message: "Event deleted successfully" });
+    await Event.findByIdAndDelete(req.params.id);
+    res.status(200).json("The post has been deleted");
   } catch (error) {
     next(error);
   }
+  
+  // try {
+  //   const event = await Event.findById(req.params.id);
+  //   if (!event) {
+  //     return next(errorHandler(404, "Event not found"));
+  //   }
+  //   if (!req.user.isAdmin) {
+  //     return next(
+  //       errorHandler(403, "You are not allowed to delete this event")
+  //     );
+  //   }
+
+  //   await event.deleteOne();
+  //   res.json({ message: "Event deleted successfully" });
+  // } catch (error) {
+  //   next(error);
+  // }
 };
